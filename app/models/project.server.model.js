@@ -4,6 +4,10 @@ var mongoose = require('mongoose'),
 	Schema = mongoose.Schema;
 
 var ProjectSchema = new Schema({
+  parent_project: {
+		type: Schema.ObjectId,
+		ref: 'Project'
+	},
 	title: {
 		type: String,
 		default: '',
@@ -30,7 +34,8 @@ var ProjectSchema = new Schema({
   },
 	user_created: {
 		type: Schema.ObjectId,
-		ref: 'User'
+		ref: 'User',
+    required: true
 	}
 });
 
