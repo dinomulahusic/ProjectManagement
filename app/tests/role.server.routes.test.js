@@ -74,6 +74,46 @@ describe('Role CRUD tests', function() {
 			});
 	});
 
+  it('should not be able to save duplicate Role instance', function(done) {
+		agent.post('/auth/signin')
+			.send(credentials)
+			.expect(200)
+			.end(function(signinErr, signinRes) {
+				// Handle signin error
+				if (signinErr) done(signinErr);
+
+        var role1 = {
+				  name: 'Role Name duplicate'
+			  };
+
+        var role2 = {
+				  name: 'Role Name duplicate'
+			  };
+
+				// Save a new Role
+				agent.post('/roles')
+					.send(role1)
+					.expect(200)
+					.end(function(roleSaveErr, roleSaveRes) {
+						// Handle Role save error
+						if (roleSaveErr) done(roleSaveErr);
+
+						agent.post('/roles')
+            .send(role2)
+            .expect(400)
+            .end(function(roleSaveErrDup, roleSaveResDup) {
+              // Set message assertion
+              //console.log(roleSaveResDup);
+              (roleSaveResDup.body.message).should.match('Name already exists');
+
+              // Handle Role save error
+              done(roleSaveErrDup);
+            });
+					});
+			});
+	});
+
+
 	it('should not be able to save Role instance if not logged in', function(done) {
 		agent.post('/roles')
 			.send(role)
