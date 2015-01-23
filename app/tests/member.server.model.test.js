@@ -7,17 +7,17 @@ var should = require('should'),
 	mongoose = require('mongoose'),
 	User = mongoose.model('User'),
   Project = mongoose.model('Project'),
-	ProjectUser = mongoose.model('ProjectUser');
+	Member = mongoose.model('Member');
 
 /**
  * Globals
  */
-var user, projectUser, project;
+var user, member, project;
 
 /**
  * Unit tests
  */
-describe('Project user Model Unit Tests:', function() {
+describe('Member Model Unit Tests:', function() {
 	beforeEach(function(done) {
 		user = new User({
 			firstName: 'Full',
@@ -36,7 +36,7 @@ describe('Project user Model Unit Tests:', function() {
 			});
 
       project.save(function() {
-        projectUser = new ProjectUser({
+        member = new Member({
           project: project,
           user: user
         });
@@ -48,16 +48,16 @@ describe('Project user Model Unit Tests:', function() {
 
 	describe('Method Save', function() {
 		it('should be able to save without problems', function(done) {
-			return projectUser.save(function(err) {
+			return member.save(function(err) {
 				should.not.exist(err);
 				done();
 			});
 		});
 
 		/*it('should be able to show an error when try to save without project', function(done) {
-			projectUser.project = null;
+			member.project = null;
 
-			return projectUser.save(function(err) {
+			return member.save(function(err) {
 				should.exist(err);
 				done();
 			});
@@ -65,7 +65,7 @@ describe('Project user Model Unit Tests:', function() {
 	});
 
 	afterEach(function(done) {
-		ProjectUser.remove().exec();
+		Member.remove().exec();
 		User.remove().exec();
 
 		done();

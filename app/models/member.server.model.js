@@ -3,7 +3,7 @@
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema;
 
-var ProjectUserSchema = new Schema({
+var MemberSchema = new Schema({
 	project: {
 		type: Schema.ObjectId,
 		ref: 'Project',
@@ -15,4 +15,4 @@ var ProjectUserSchema = new Schema({
 	}
 });
 
-mongoose.model('ProjectUser', ProjectUserSchema);
+mongoose.model('Member', MemberSchema);
