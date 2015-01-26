@@ -5,14 +5,14 @@ angular.module('projects').config(['$stateProvider',
 	function($stateProvider) {
 		// projects state routing
 		$stateProvider.
-    state('listProjects', {
+    /*state('listProjects', {
 			url: '/',
 			templateUrl: 'modules/projects/views/list-projects.client.view.html'
-		}).
-		/*state('listProjects', {
+		}).*/
+		state('listProjects', {
 			url: '/projects',
 			templateUrl: 'modules/projects/views/list-projects.client.view.html'
-		}).*/
+		}).
 		state('createProject', {
 			url: '/projects/create',
 			templateUrl: 'modules/projects/views/create-project.client.view.html'
