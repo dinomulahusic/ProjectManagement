@@ -21,6 +21,10 @@ angular.module('projects').config(['$stateProvider',
 			url: '/projects/:projectId',
 			templateUrl: 'modules/projects/views/view-project.client.view.html'
 		}).
+    state('projectSettings', {
+			url: '/projects/settings/:projectId',
+			templateUrl: 'modules/projects/views/project-settings.client.view.html'
+		}).
 		state('editProject', {
 			url: '/projects/:projectId/edit',
 			templateUrl: 'modules/projects/views/edit-project.client.view.html'
