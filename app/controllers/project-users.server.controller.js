@@ -12,7 +12,8 @@ var mongoose = require('mongoose'),
  * Create a Project user
  */
 exports.create = function(req, res) {
-	var projectUser = new ProjectUser(req.body);
+  projectUser = new ProjectUser(req.body);
+  console.log(projectUser);
 	projectUser.user = req.user;
 
 	projectUser.save(function(err) {
@@ -73,12 +74,13 @@ exports.delete = function(req, res) {
  * List of Project users
  */
 exports.list = function(req, res) {
-	ProjectUser.find().populate('user', 'displayName').exec(function(err, projectUsers) {
+	ProjectUser.find().populate('user', 'displayName').populate('project', 'title').exec(function(err, projectUsers) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
+      console.log(projectUsers);
 			res.jsonp(projectUsers);
 		}
 	});
@@ -88,7 +90,7 @@ exports.list = function(req, res) {
  * Project user middleware
  */
 exports.projectUserByID = function(req, res, next, id) {
-	ProjectUser.findById(id).populate('user', 'displayName').exec(function(err, projectUser) {
+	ProjectUser.findById(id).populate('user', 'displayName').populate('project', 'title').exec(function(err, projectUser) {
 		if (err) return next(err);
 		if (! projectUser) return next(new Error('Failed to load Project user ' + id));
 		req.projectUser = projectUser ;
