@@ -1,14 +1,8 @@
 'use strict';
 
-/**
- * Module dependencies.
- */
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema;
 
-/**
- * Article Schema
- */
 var ProjectSchema = new Schema({
 	title: {
 		type: String,

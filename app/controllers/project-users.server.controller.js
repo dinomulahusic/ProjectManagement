@@ -12,8 +12,7 @@ var mongoose = require('mongoose'),
  * Create a Project user
  */
 exports.create = function(req, res) {
-  projectUser = new ProjectUser(req.body);
-  console.log(projectUser);
+  var projectUser = new ProjectUser(req.body);
 	projectUser.user = req.user;
 
 	projectUser.save(function(err) {
@@ -80,7 +79,6 @@ exports.list = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-      console.log(projectUsers);
 			res.jsonp(projectUsers);
 		}
 	});

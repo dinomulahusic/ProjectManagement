@@ -82,7 +82,7 @@ describe('Project user CRUD tests', function() {
 
 								// Get Project users list
 								var projectUsers = projectUsersGetRes.body;
-
+                //console.log(projectUsers);
 								// Set assertions
 								(projectUsers[0].user._id).should.equal(userId);
 								(projectUsers[0].project._id).should.equal(projectId);
@@ -104,9 +104,8 @@ describe('Project user CRUD tests', function() {
 			});
 	});
 
-	/*it('should not be able to save Project user instance if no name is provided', function(done) {
-		// Invalidate name field
-		projectUser.name = '';
+	it('should not be able to save Project user instance if no project is provided', function(done) {
+		projectUser.project = null;
 
 		agent.post('/auth/signin')
 			.send(credentials)
@@ -124,13 +123,13 @@ describe('Project user CRUD tests', function() {
 					.expect(400)
 					.end(function(projectUserSaveErr, projectUserSaveRes) {
 						// Set message assertion
-						(projectUserSaveRes.body.message).should.match('Please fill Project user name');
+						(projectUserSaveRes.body.message).should.match('Project is required');
 
 						// Handle Project user save error
 						done(projectUserSaveErr);
 					});
 			});
-	});*/
+	});
 
 	it('should be able to update Project user instance if signed in', function(done) {
 		agent.post('/auth/signin')

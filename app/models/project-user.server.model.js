@@ -1,18 +1,13 @@
 'use strict';
 
-/**
- * Module dependencies.
- */
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema;
 
-/**
- * Project user Schema
- */
 var ProjectUserSchema = new Schema({
-	Project: {
+	project: {
 		type: Schema.ObjectId,
-		ref: 'Project'
+		ref: 'Project',
+    required: 'Project is required'
 	},
 	user: {
 		type: Schema.ObjectId,
