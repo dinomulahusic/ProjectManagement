@@ -164,40 +164,28 @@ describe('Project CRUD tests', function() {
 			});
 	});
 
-	it('should be able to get a list of projects if not signed in', function(done) {
-		// Create new project model instance
-		var projectObj = new Project(project);
-
-		// Save the project
-		projectObj.save(function() {
-			// Request projects
-			request(app).get('/projects')
-				.end(function(req, res) {
-					// Set assertion
-					res.body.should.be.an.Array.with.lengthOf(1);
-
-					// Call the assertion callback
-					done();
-				});
-
-		});
+	it('should not be able to get a list of projects if not signed in', function(done) {
+		agent.get('/projects')
+			.expect(401)
+			.end(function(projectSaveErr, projectSaveRes) {
+				// Call the assertion callback
+				done(projectSaveErr);
+			});
 	});
 
 
-	it('should be able to get a single project if not signed in', function(done) {
+	it('should not be able to get a single project if not signed in', function(done) {
 		// Create new project model instance
 		var projectObj = new Project(project);
 
 		// Save the project
 		projectObj.save(function() {
 			request(app).get('/projects/' + projectObj._id)
-				.end(function(req, res) {
-					// Set assertion
-					res.body.should.be.an.Object.with.property('title', project.title);
-
-					// Call the assertion callback
-					done();
-				});
+				.expect(401)
+			  .end(function(projectSaveErr, projectSaveRes) {
+          // Call the assertion callback
+          done(projectSaveErr);
+			});
 		});
 	});
 
