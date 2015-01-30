@@ -26,7 +26,6 @@ exports.read = function(req, res) {
 
 exports.update = function(req, res) {
 	var project = req.project;
-
 	project = _.extend(project, req.body);
 
 	project.save(function(err) {
@@ -42,8 +41,10 @@ exports.update = function(req, res) {
 
 exports.delete = function(req, res) {
 	var project = req.project;
-
-	project.remove(function(err) {
+	project = _.extend(project, req.body);
+	project.status = 'deleted';
+	
+	project.save(function(err) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)

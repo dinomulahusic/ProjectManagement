@@ -5,27 +5,19 @@ var should = require('should'),
 	app = require('../../server'),
 	mongoose = require('mongoose'),
 	User = mongoose.model('User'),
-  Project = mongoose.model('Project'),
+  	Project = mongoose.model('Project'),
 	Member = mongoose.model('Member'),
 	agent = request.agent(app);
 
-/**
- * Globals
- */
 var credentials, user, project,  member;
 
-/**
- * Member routes tests
- */
 describe('Member CRUD tests', function() {
 	beforeEach(function(done) {
-		// Create user credentials
 		credentials = {
 			username: 'username',
 			password: 'password'
 		};
 
-		// Create a new user
 		user = new User({
 			firstName: 'Full',
 			lastName: 'Name',
@@ -36,21 +28,20 @@ describe('Member CRUD tests', function() {
 			provider: 'local'
 		});
 
-    // Save a user to the test db and create new Member
-		user.save(function() {
-      project = new Project({
+   		user.save(function() {
+      		project = new Project({
 				title: 'Project Title',
 				description: 'Project Content',
 				user_created: user
 			});
 
-      project.save(function() {
-        member = new Member({
-          project: project
-        });
+      		project.save(function() {
+        		member = new Member({
+          			project: project
+        		});
 
-        done();
-		  });
+        		done();
+		  	});
 		});
 	});
 
@@ -59,35 +50,25 @@ describe('Member CRUD tests', function() {
 			.send(credentials)
 			.expect(200)
 			.end(function(signinErr, signinRes) {
-				// Handle signin error
-				if (signinErr) done(signinErr);
+				if (signinErr) 
+					done(signinErr);
 
-				// Get the userId
-				var userId = user.id;
-        var projectId = project.id;
-
-				// Save a new Member
 				agent.post('/members')
 					.send(member)
 					.expect(200)
 					.end(function(memberSaveErr, memberSaveRes) {
-						// Handle Member save error
-						if (memberSaveErr) done(memberSaveErr);
+						if (memberSaveErr) 
+							done(memberSaveErr);
 
-						// Get a list of Members
 						agent.get('/members')
 							.end(function(membersGetErr, membersGetRes) {
-								// Handle Member save error
-								if (membersGetErr) done(membersGetErr);
+								if (membersGetErr) 
+									done(membersGetErr);
 
-								// Get Members list
 								var members = membersGetRes.body;
-                //console.log(members);
-								// Set assertions
-								(members[0].user._id).should.equal(userId);
-								(members[0].project._id).should.equal(projectId);
+								members[0].user._id.should.equal(user.id);
+								members[0].project._id.should.equal(project.id);
 
-								// Call the assertion callback
 								done();
 							});
 					});
@@ -99,76 +80,7 @@ describe('Member CRUD tests', function() {
 			.send(member)
 			.expect(401)
 			.end(function(memberSaveErr, memberSaveRes) {
-				// Call the assertion callback
 				done(memberSaveErr);
-			});
-	});
-
-	it('should not be able to save Member instance if no project is provided', function(done) {
-		member.project = null;
-
-		agent.post('/auth/signin')
-			.send(credentials)
-			.expect(200)
-			.end(function(signinErr, signinRes) {
-				// Handle signin error
-				if (signinErr) done(signinErr);
-
-				// Get the userId
-				var userId = user.id;
-
-				// Save a new Member
-				agent.post('/members')
-					.send(member)
-					.expect(400)
-					.end(function(memberSaveErr, memberSaveRes) {
-						// Set message assertion
-						(memberSaveRes.body.message).should.match('Project is required');
-
-						// Handle Member save error
-						done(memberSaveErr);
-					});
-			});
-	});
-
-	it('should be able to update Member instance if signed in', function(done) {
-		agent.post('/auth/signin')
-			.send(credentials)
-			.expect(200)
-			.end(function(signinErr, signinRes) {
-				// Handle signin error
-				if (signinErr) done(signinErr);
-
-				// Get the userId
-				var userId = user.id;
-
-				// Save a new Member
-				agent.post('/members')
-					.send(member)
-					.expect(200)
-					.end(function(memberSaveErr, memberSaveRes) {
-						// Handle Member save error
-						if (memberSaveErr) done(memberSaveErr);
-
-						/*// Update Member name
-						member.name = 'WHY YOU GOTTA BE SO MEAN?';*/
-
-						// Update existing Member
-						agent.put('/members/' + memberSaveRes.body._id)
-							.send(member)
-							.expect(200)
-							.end(function(memberUpdateErr, memberUpdateRes) {
-								// Handle Member update error
-								if (memberUpdateErr) done(memberUpdateErr);
-
-								// Set assertions
-								(memberUpdateRes.body._id).should.equal(memberSaveRes.body._id);
-								/*(memberUpdateRes.body.name).should.match('WHY YOU GOTTA BE SO MEAN?');*/
-
-								// Call the assertion callback
-								done();
-							});
-					});
 			});
 	});
 
@@ -182,48 +94,41 @@ describe('Member CRUD tests', function() {
 
 
 	it('should not be able to get a single member if not signed in', function(done) {
-		var memberObj = new Member(member);
+		member.user = user;
 
-		memberObj.save(function() {
-			request(app).get('/members/' + memberObj._id)
+		member.save(function() {
+			request(app).get('/members/' + member._id)
 				.expect(401)
-			  .end(function(memberSaveErr, memberSaveRes) {
-          done(memberSaveErr);
-			});
+				.end(function(memberSaveErr, memberSaveRes) {
+          			done(memberSaveErr);
+				});
 		});
 	});
 
-	/*it('should be able to delete Member instance if signed in', function(done) {
+	it('should be able to delete Member instance if signed in', function(done) {
 		agent.post('/auth/signin')
 			.send(credentials)
 			.expect(200)
 			.end(function(signinErr, signinRes) {
-				// Handle signin error
-				if (signinErr) done(signinErr);
+				if (signinErr) 
+					done(signinErr);
 
-				// Get the userId
-				var userId = user.id;
-
-				// Save a new Member
 				agent.post('/members')
 					.send(member)
 					.expect(200)
 					.end(function(memberSaveErr, memberSaveRes) {
-						// Handle Member save error
-						if (memberSaveErr) done(memberSaveErr);
+						if (memberSaveErr) 
+							done(memberSaveErr);
 
-						// Delete existing Member
 						agent.delete('/members/' + memberSaveRes.body._id)
 							.send(member)
 							.expect(200)
 							.end(function(memberDeleteErr, memberDeleteRes) {
-								// Handle Member error error
-								if (memberDeleteErr) done(memberDeleteErr);
+								if (memberDeleteErr) 
+									done(memberDeleteErr);
 
-								// Set assertions
-								(memberDeleteRes.body._id).should.equal(memberSaveRes.body._id);
+								memberDeleteRes.body._id.should.equal(memberSaveRes.body._id);
 
-								// Call the assertion callback
 								done();
 							});
 					});
@@ -231,30 +136,21 @@ describe('Member CRUD tests', function() {
 	});
 
 	it('should not be able to delete Member instance if not signed in', function(done) {
-		// Set Member user
 		member.user = user;
 
-		// Create new Member model instance
-		var memberObj = new Member(member);
-
-		// Save the Member
-		memberObj.save(function() {
-			// Try deleting Member
-			request(app).delete('/members/' + memberObj._id)
+		member.save(function() {
+			request(app).delete('/members/' + member._id)
 			.expect(401)
 			.end(function(memberDeleteErr, memberDeleteRes) {
-				// Set message assertion
-				(memberDeleteRes.body.message).should.match('User is not logged in');
-
-				// Handle Member error error
+				memberDeleteRes.body.message.should.match('User is not logged in');
 				done(memberDeleteErr);
 			});
-
 		});
-	});*/
+	});
 
 	afterEach(function(done) {
 		User.remove().exec();
+		Project.remove().exec();
 		Member.remove().exec();
 		done();
 	});

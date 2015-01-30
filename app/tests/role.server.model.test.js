@@ -1,28 +1,18 @@
 'use strict';
 
-/**
- * Module dependencies.
- */
 var should = require('should'),
 	mongoose = require('mongoose'),
-	User = mongoose.model('User'),
 	Role = mongoose.model('Role');
 
-/**
- * Globals
- */
 var user, role;
 
-/**
- * Unit tests
- */
 describe('Role Model Unit Tests:', function() {
 	beforeEach(function(done) {
-			role = new Role({
-				name: 'Role Name'
-			});
+		role = new Role({
+			name: 'Role Name'
+		});
 
-			done();
+		done();
 	});
 
 	describe('Method Save', function() {
@@ -33,7 +23,7 @@ describe('Role Model Unit Tests:', function() {
 			});
 		});
 
-		it('should be able to show an error when try to save without name', function(done) {
+		it('should show an error when try to save without name', function(done) {
 			role.name = '';
 
 			return role.save(function(err) {
@@ -45,7 +35,6 @@ describe('Role Model Unit Tests:', function() {
 
 	afterEach(function(done) {
 		Role.remove().exec();
-		User.remove().exec();
 
 		done();
 	});

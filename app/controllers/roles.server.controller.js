@@ -1,16 +1,10 @@
 'use strict';
 
-/**
- * Module dependencies.
- */
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Role = mongoose.model('Role'),
 	_ = require('lodash');
 
-/**
- * Create a Role
- */
 exports.create = function(req, res) {
 	var role = new Role(req.body);
 
@@ -25,16 +19,10 @@ exports.create = function(req, res) {
 	});
 };
 
-/**
- * Show the current Role
- */
 exports.read = function(req, res) {
 	res.jsonp(req.role);
 };
 
-/**
- * Update a Role
- */
 exports.update = function(req, res) {
 	var role = req.role ;
 
@@ -51,26 +39,6 @@ exports.update = function(req, res) {
 	});
 };
 
-/**
- * Delete an Role
- */
-exports.delete = function(req, res) {
-	var role = req.role ;
-
-	role.remove(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(role);
-		}
-	});
-};
-
-/**
- * List of Roles
- */
 exports.list = function(req, res) {
 	Role.find().sort('-name').exec(function(err, roles) {
 		if (err) {
@@ -83,9 +51,6 @@ exports.list = function(req, res) {
 	});
 };
 
-/**
- * Role middleware
- */
 exports.roleByID = function(req, res, next, id) {
 	Role.findById(id).exec(function(err, role) {
 		if (err) return next(err);
@@ -93,4 +58,9 @@ exports.roleByID = function(req, res, next, id) {
 		req.role = role ;
 		next();
 	});
+};
+
+exports.hasAuthorization = function(req, res, next) {
+	//TODO
+	next();
 };

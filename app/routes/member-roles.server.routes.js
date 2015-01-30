@@ -4,7 +4,6 @@ module.exports = function(app) {
 	var users = require('../../app/controllers/users.server.controller');
 	var memberRoles = require('../../app/controllers/member-roles.server.controller');
 
-	// Member roles Routes
 	app.route('/member-roles')
 		.get(users.requiresLogin, memberRoles.list)
 		.post(users.requiresLogin, memberRoles.create);
@@ -14,6 +13,5 @@ module.exports = function(app) {
 		.put(users.requiresLogin, memberRoles.hasAuthorization, memberRoles.update)
 		.delete(users.requiresLogin, memberRoles.hasAuthorization, memberRoles.delete);
 
-	// Finish by binding the Member role middleware
 	app.param('memberRoleId', memberRoles.memberRoleByID);
 };

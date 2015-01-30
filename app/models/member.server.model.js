@@ -7,11 +7,12 @@ var MemberSchema = new Schema({
 	project: {
 		type: Schema.ObjectId,
 		ref: 'Project',
-    required: 'Project is required'
+    	required: 'Project is required'
 	},
 	user: {
 		type: Schema.ObjectId,
-		ref: 'User'
+		ref: 'User',
+		required: 'User is required'
 	}
 });
 

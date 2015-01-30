@@ -7,12 +7,12 @@ var MemberRoleSchema = new Schema({
 	member: {
 		type: Schema.ObjectId,
 		ref: 'Member',
-    required: 'Please provide Member'
+    	required: 'Member is required'
 	},
 	role: {
 		type: Schema.ObjectId,
 		ref: 'Role',
-    required: 'Please provide Role'
+    	required: 'Role is required'
 	}
 });
 

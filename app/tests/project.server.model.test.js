@@ -1,6 +1,7 @@
 'use strict';
 
 var should = require('should'),
+	errorHandler = require('../controllers/errors.server.controller'),
 	mongoose = require('mongoose'),
 	User = mongoose.model('User'),
 	Project = mongoose.model('Project');
@@ -37,7 +38,23 @@ describe('Project Model Unit Tests:', function() {
 			});
 		});
 
-		it('should be able to show an error when try to save without title', function(done) {
+		it('should not be possible to save project with duplicate title', function(done) {
+			return project.save(function(err) {
+				should.not.exist(err);
+
+				var duplicateProject = new Project({
+					title: project.title,
+					user_created: project.user_created
+				});
+
+				duplicateProject.save(function(err) {
+					errorHandler.getErrorMessage(err).should.match('Title already exists');
+					done();
+				});	
+			});
+		});
+
+		it('should show an error when try to save without title', function(done) {
 			project.title = '';
 
 			return project.save(function(err) {

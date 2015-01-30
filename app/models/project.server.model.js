@@ -7,7 +7,8 @@ var ProjectSchema = new Schema({
 	title: {
 		type: String,
 		trim: true,
-		required: 'Title cannot be blank'
+		required: 'Title cannot be blank',
+		unique: true
 	},
 	description: {
 		type: String,
