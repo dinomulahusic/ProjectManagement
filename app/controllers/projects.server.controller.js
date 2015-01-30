@@ -1,16 +1,10 @@
 'use strict';
 
-/**
- * Module dependencies.
- */
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Project = mongoose.model('Project'),
 	_ = require('lodash');
 
-/**
- * Create a project
- */
 exports.create = function(req, res) {
 	var project = new Project(req.body);
 	project.user_created = req.user;
@@ -26,16 +20,10 @@ exports.create = function(req, res) {
 	});
 };
 
-/**
- * Show the current project
- */
 exports.read = function(req, res) {
 	res.json(req.project);
 };
 
-/**
- * Update a project
- */
 exports.update = function(req, res) {
 	var project = req.project;
 
@@ -52,9 +40,6 @@ exports.update = function(req, res) {
 	});
 };
 
-/**
- * Delete a project
- */
 exports.delete = function(req, res) {
 	var project = req.project;
 
@@ -69,9 +54,6 @@ exports.delete = function(req, res) {
 	});
 };
 
-/**
- * List of Articles
- */
 exports.list = function(req, res) {
 	Project.find().sort('-create_date').populate('user_created', 'displayName').exec(function(err, projects) {
 		if (err) {
@@ -84,9 +66,6 @@ exports.list = function(req, res) {
 	});
 };
 
-/**
- * Project middleware
- */
 exports.projectByID = function(req, res, next, id) {
 	Project.findById(id).populate('user_created', 'displayName').exec(function(err, project) {
 		if (err) return next(err);
@@ -96,9 +75,6 @@ exports.projectByID = function(req, res, next, id) {
 	});
 };
 
-/**
- * Project authorization middleware
- */
 exports.hasAuthorization = function(req, res, next) {
 	if (req.project.user_created.id !== req.user.id) {
 		return res.status(403).send({

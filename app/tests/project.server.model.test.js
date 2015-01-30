@@ -1,21 +1,12 @@
 'use strict';
 
-/**
- * Module dependencies.
- */
 var should = require('should'),
 	mongoose = require('mongoose'),
 	User = mongoose.model('User'),
 	Project = mongoose.model('Project');
 
-/**
- * Globals
- */
 var user, project;
 
-/**
- * Unit tests
- */
 describe('Project Model Unit Tests:', function() {
 	beforeEach(function(done) {
 		user = new User({
